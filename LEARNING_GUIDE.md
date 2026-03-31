@@ -14,21 +14,20 @@ A complete machine learning pipeline that:
 
 ## Learning Path
 
-### Level 1: Data Processing (Start Here!)
+### Level 1: Data Processing 
 
-#### File: [src/preprocessing.py](src/preprocessing.py)
+#### File: [src/preprocessing.py]
 
 **Core concept**: Convert tabular data → tensors
 
-**Key functions to understand:**
+**Key functions:**
 
 1. **`load_and_group_plays()`**
    - What it does: Groups CSV rows by play
    - Input: CSV path
    - Output: Dict mapping (gameId, playId) → DataFrame
-   - Learn: Pandas groupby operations
 
-2. **`play_to_tensor()`** ⭐ Most important!
+2. **`play_to_tensor()`** 
    - What it does: Converts one play DataFrame → (T, N, F) tensor
    - Input: DataFrame with frame.id, nflId, x, y, s, dir
    - Output:
@@ -47,7 +46,6 @@ A complete machine learning pipeline that:
    5. Remaining entries stay 0 with mask = 0 (padding)
    ```
 
-**Exercise**: Read the line-by-line explanation I gave earlier. Try to trace through one example play manually.
 
 ---
 
@@ -79,10 +77,6 @@ batch = stack([dataset[0], dataset[1], dataset[2], dataset[3]])
 # Result: (4, 100, 22, 4) - 4 plays at once!
 ```
 
-**Exercise**:
-- Run [test_dataset.py](test_dataset.py)
-- Look at batch shapes
-- Try changing batch_size
 
 ---
 
@@ -94,7 +88,7 @@ batch = stack([dataset[0], dataset[1], dataset[2], dataset[3]])
 
 **Two models:**
 
-1. **`SpatiotemporalEncoder`** ⭐ Core architecture
+1. **`SpatiotemporalEncoder`**  Core architecture
    ```
    Input: (B, T, N, F) = (batch, time, players, features)
 

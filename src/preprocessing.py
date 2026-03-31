@@ -19,7 +19,8 @@ def load_and_group_plays(csv_path):
     # Group by play
     plays = {}
     for (game_id, play_id), play_df in df.groupby(['gameId', 'playId']):
-        plays[(game_id, play_id)] = play_df.sort_values('frame.id')
+        frame_col = 'frameId' if 'frameId' in play_df.columns else 'frame.id'
+        plays[(game_id, play_id)] = play_df.sort_values(frame_col)
 
     return plays
 
@@ -55,7 +56,8 @@ def play_to_tensor(play_df, max_frames=100, max_players=22, features=['x', 'y', 
         data: (max_frames, max_players, len(features)) tensor
         mask: (max_frames, max_players) binary mask
     """
-    frames = sorted(play_df['frame.id'].unique())
+    frame_col = 'frameId' if 'frameId' in play_df.columns else 'frame.id'
+    frames = sorted(play_df[frame_col].unique())
     players = play_df['nflId'].unique() if 'nflId' in play_df.columns else list(range(len(play_df)))
 
     T = min(len(frames), max_frames)
@@ -68,7 +70,7 @@ def play_to_tensor(play_df, max_frames=100, max_players=22, features=['x', 'y', 
     player_to_idx = {p: i for i, p in enumerate(list(players)[:N])}
 
     for t, frame_id in enumerate(frames[:T]):
-        frame_data = play_df[play_df['frame.id'] == frame_id]
+        frame_data = play_df[play_df[frame_col] == frame_id]
         for _, row in frame_data.iterrows():
             player_id = row.get('nflId', row.name)
             if player_id in player_to_idx:
